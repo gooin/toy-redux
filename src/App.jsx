@@ -29,7 +29,9 @@ export const App = () => {
     return (
         <appContext.Provider value={contextValue}>
             <A1/>
-            <Wrapper/>
+            <UserModifier x={'xx'}>
+                <h1>XXX</h1>
+            </UserModifier>
             <A3/>
         </appContext.Provider>
     );
@@ -42,29 +44,40 @@ const A1 = () => {
     )
 }
 
+const connect = (Component)=>{
+    return (props) => {
+        const {appState, setAppState} = useContext(appContext);
 
-const Wrapper = ()=>{
-    const {appState, setAppState} = useContext(appContext);
-
-    // 使用dispatch规范setState流程
-    const dispatch = (action) => {
-        setAppState(reducer(appState,action))
-    }
-    return <A2 dispatch={dispatch} appState={appState}/>
-}
+        // 使用dispatch规范setState流程
+        const dispatch = (action) => {
+            setAppState(reducer(appState, action))
+        }
+        return <Component {...props} dispatch={dispatch} appState={appState}/>
+    };
+};
 
 
-const A2 = ({dispatch,appState}) => {
+
+
+const UserModifier = connect((props) => {
+    console.log('props', props);
+
+    const {dispatch,appState,children} = props;
     const onChange = (e) => {
         dispatch({type: 'updateUser', payload: {name: e.target.value}})
     }
     return (
-        <input
-    value={appState.user.name}
-    onChange={onChange}
-    />
+        <>
+            {children}
+            <input
+                value={appState.user.name}
+                onChange={onChange}
+            />
+        </>
+    
     )
-}
+});
+
 const A3 = () => {
     return (
         <h1>A3</h1>
