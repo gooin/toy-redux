@@ -1,7 +1,25 @@
-import React, {useContext, useMemo, useState} from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 
 const appContext = React.createContext(null)
 
+const store = {
+    state: {
+        user: {name: '张三', age: 123}
+    },
+    setState(newState) {
+        console.log('newState', newState);
+        store.state = newState
+        store.listeners.map(fn => fn(store.state))
+    },
+    listeners: [],
+    subscribe(fn) {
+        store.listeners.push(fn)
+        return () => {
+            const index = store.listeners.indexOf(fn);
+            store.listeners.splice(index, 1);
+        }
+    }
+}
 
 // reducer 规范state的更新流程
 const reducer = (state, {type, payload}) => {
@@ -18,51 +36,51 @@ const reducer = (state, {type, payload}) => {
     }
 }
 
+const connect = (Component) => {
+
+    return (props) => {
+        const {state, setState} = useContext(appContext);
+        const [, update] = useState({});
+        // 使用dispatch规范setState流程
+        useEffect(() => {
+            store.subscribe(() => {
+                update({})
+            })
+        }, [])
+        const dispatch = (action) => {
+            setState(reducer(state, action))
+            // update({})
+        }
+
+        return <Component {...props} dispatch={dispatch} appState={state}/>
+    };
+};
 
 export const App = () => {
-    const [appState, setAppState] = useState({
-        user: {name: '张三', age: 123}
-    })
-
-    //
-
-
-    const contextValue = {appState, setAppState};
 
     // 只要APP组件的的状态改变了，这个组件会重新渲染，会导致没有状态的A3也会重新渲染。
     // 使用 useMemo 将将A3缓存起来。
     let cachedA3 = useMemo(() => <A3/>, [])
+
+    // 将状态写在外部，即redux。仅更新需要的组件。
     return (
-        <appContext.Provider value={contextValue}>
+        <appContext.Provider value={store}>
             <A1/>
             <UserModifier x={'xx'}>
                 <h1>XXX</h1>
             </UserModifier>
-            {cachedA3}
+            {/*{cachedA3}*/}
+            <A3/>
         </appContext.Provider>
     );
 }
 
-const A1 = () => {
+const A1 = connect(({appState, dispatch}) => {
     console.log("A1 执行了" + new Date());
-
-    const {appState} = useContext(appContext);
     return (
         <h1>USER: {appState.user.name}</h1>
     )
-}
-
-const connect = (Component) => {
-    return (props) => {
-        const {appState, setAppState} = useContext(appContext);
-
-        // 使用dispatch规范setState流程
-        const dispatch = (action) => {
-            setAppState(reducer(appState, action))
-        }
-        return <Component {...props} dispatch={dispatch} appState={appState}/>
-    };
-};
+})
 
 
 const UserModifier = connect((props) => {
