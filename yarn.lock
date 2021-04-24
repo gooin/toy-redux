@@ -215,7 +215,7 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@vitejs/plugin-react-refresh@^1.3.1":
+"@vitejs/plugin-react-refresh@1.3.1":
   version "1.3.1"
   resolved "https://registry.npm.taobao.org/@vitejs/plugin-react-refresh/download/@vitejs/plugin-react-refresh-1.3.1.tgz#dfdb17e9924ba57fc4951ac882e39628051a30f4"
   integrity sha1-39sX6ZJLpX/ElRrIguOWKAUaMPQ=
@@ -415,9 +415,9 @@ postcss@^8.2.1:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-react-dom@^17.0.0:
+react-dom@17.0.2:
   version "17.0.2"
-  resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-17.0.2.tgz?cache=0&sync_timestamp=1616516389234&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-dom%2Fdownload%2Freact-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
+  resolved "https://registry.nlark.com/react-dom/download/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
   integrity sha1-7P+2hF462Nv83EmPDQqTlzZQLCM=
   dependencies:
     loose-envify "^1.1.0"
@@ -429,9 +429,9 @@ react-refresh@^0.9.0:
   resolved "https://registry.npm.taobao.org/react-refresh/download/react-refresh-0.9.0.tgz?cache=0&sync_timestamp=1616516390307&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-refresh%2Fdownload%2Freact-refresh-0.9.0.tgz#71863337adc3e5c2f8a6bfddd12ae3bfe32aafbf"
   integrity sha1-cYYzN63D5cL4pr/d0Srjv+Mqr78=
 
-react@^17.0.0:
+react@17.0.2:
   version "17.0.2"
-  resolved "https://registry.npm.taobao.org/react/download/react-17.0.2.tgz?cache=0&sync_timestamp=1616516399114&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  resolved "https://registry.nlark.com/react/download/react-17.0.2.tgz?cache=0&sync_timestamp=1619195561860&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact%2Fdownload%2Freact-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
   integrity sha1-0LXMUW0p6z7uOD91tihkz7aAADc=
   dependencies:
     loose-envify "^1.1.0"
@@ -492,9 +492,9 @@ to-fast-properties@^2.0.0:
   resolved "https://registry.npm.taobao.org/to-fast-properties/download/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
   integrity sha1-3F5pjL0HkmW8c+A3doGk5Og/YW4=
 
-vite@^2.1.0:
+vite@2.1.2:
   version "2.1.2"
-  resolved "https://registry.npm.taobao.org/vite/download/vite-2.1.2.tgz#0aecaf6d34112b24536df1a14cd8d74fdcab6e20"
+  resolved "https://registry.nlark.com/vite/download/vite-2.1.2.tgz#0aecaf6d34112b24536df1a14cd8d74fdcab6e20"
   integrity sha1-CuyvbTQRKyRTbfGhTNjXT9yrbiA=
   dependencies:
     esbuild "^0.9.3"
