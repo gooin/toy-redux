@@ -1,60 +1,7 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react'
 
-const appContext = React.createContext(null)
+import {appContext, connect, store} from "./redux.jsx";
 
-const store = {
-    state: {
-        user: {name: '张三', age: 123}
-    },
-    setState(newState) {
-        console.log('newState', newState);
-        store.state = newState
-        store.listeners.map(fn => fn(store.state))
-    },
-    listeners: [],
-    subscribe(fn) {
-        store.listeners.push(fn)
-        return () => {
-            const index = store.listeners.indexOf(fn);
-            store.listeners.splice(index, 1);
-        }
-    }
-}
-
-// reducer 规范state的更新流程
-const reducer = (state, {type, payload}) => {
-    if (type === 'updateUser') {
-        return {
-            ...state,
-            user: {
-                ...state.user,
-                ...payload
-            }
-        }
-    } else {
-        return state
-    }
-}
-
-const connect = (Component) => {
-
-    return (props) => {
-        const {state, setState} = useContext(appContext);
-        const [, update] = useState({});
-        // 使用dispatch规范setState流程
-        useEffect(() => {
-            store.subscribe(() => {
-                update({})
-            })
-        }, [])
-        const dispatch = (action) => {
-            setState(reducer(state, action))
-            // update({})
-        }
-
-        return <Component {...props} dispatch={dispatch} appState={state}/>
-    };
-};
 
 export const App = () => {
 
