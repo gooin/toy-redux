@@ -22,17 +22,21 @@ export const App = () => {
     );
 }
 
-const A1 = connect(({appState, dispatch}) => {
+// select不传入参数。 用默认的数据
+const A1 = connect()(({user, dispatch}) => {
     console.log("A1 执行了" + new Date());
     return (
-        <h1>USER: {appState.user.name}</h1>
+        <h1>USER: {user.name}</h1>
     )
 })
 
 
-const UserModifier = connect((props) => {
+// select 传入参数。 筛选出数据。 可以避免下面用的时候 aa.bb.cc.dd 点很长一串。
+const UserModifier = connect((state) => {
+    return {user: state.user}
+})((props) => {
     console.log("UserModifier 执行了" + new Date());
-    const {dispatch, appState, children} = props;
+    const {dispatch, user, children} = props;
     const onChange = (e) => {
         dispatch({type: 'updateUser', payload: {name: e.target.value}})
     }
@@ -40,7 +44,7 @@ const UserModifier = connect((props) => {
         <>
             {children}
             <input
-                value={appState.user.name}
+                value={user.name}
                 onChange={onChange}
             />
         </>

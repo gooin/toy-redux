@@ -34,11 +34,12 @@ export const reducer = (state, {type, payload}) => {
     }
 }
 
-export const connect = (Component) => {
+export const connect = (selector) => (Component) => {
 
     return (props) => {
         const {state, setState} = useContext(appContext);
         const [, update] = useState({});
+        const data = selector ? selector(state) : state;
         // 使用dispatch规范setState流程
         useEffect(() => {
             store.subscribe(() => {
@@ -50,7 +51,7 @@ export const connect = (Component) => {
             // update({})
         }
 
-        return <Component {...props} dispatch={dispatch} appState={state}/>;
+        return <Component {...props} {...data} dispatch={dispatch}/>;
     };
 };
 
