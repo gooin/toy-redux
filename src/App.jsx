@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useMemo, useState} from 'react'
 
 const appContext = React.createContext(null)
 
@@ -19,32 +19,40 @@ const reducer = (state, {type, payload}) => {
 }
 
 
-
-
 export const App = () => {
     const [appState, setAppState] = useState({
         user: {name: '张三', age: 123}
     })
+
+    //
+
+
     const contextValue = {appState, setAppState};
+
+    // 只要APP组件的的状态改变了，这个组件会重新渲染，会导致没有状态的A3也会重新渲染。
+    // 使用 useMemo 将将A3缓存起来。
+    let cachedA3 = useMemo(() => <A3/>, [])
     return (
         <appContext.Provider value={contextValue}>
             <A1/>
             <UserModifier x={'xx'}>
                 <h1>XXX</h1>
             </UserModifier>
-            <A3/>
+            {cachedA3}
         </appContext.Provider>
     );
 }
 
 const A1 = () => {
+    console.log("A1 执行了" + new Date());
+
     const {appState} = useContext(appContext);
     return (
         <h1>USER: {appState.user.name}</h1>
     )
 }
 
-const connect = (Component)=>{
+const connect = (Component) => {
     return (props) => {
         const {appState, setAppState} = useContext(appContext);
 
@@ -57,12 +65,9 @@ const connect = (Component)=>{
 };
 
 
-
-
 const UserModifier = connect((props) => {
-    console.log('props', props);
-
-    const {dispatch,appState,children} = props;
+    console.log("UserModifier 执行了" + new Date());
+    const {dispatch, appState, children} = props;
     const onChange = (e) => {
         dispatch({type: 'updateUser', payload: {name: e.target.value}})
     }
@@ -74,11 +79,12 @@ const UserModifier = connect((props) => {
                 onChange={onChange}
             />
         </>
-    
+
     )
 });
 
 const A3 = () => {
+    console.log("A3 执行了" + new Date());
     return (
         <h1>A3</h1>
     )
