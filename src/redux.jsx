@@ -2,7 +2,8 @@ import React, {useContext, useEffect, useState} from "react";
 
 export const store = {
     state: {
-        user: {name: '张三', age: 123}
+        user: {name: '张三', age: 123},
+        group: {name: '大大组'}
     },
     setState(newState) {
         console.log('newState', newState);
@@ -34,21 +35,39 @@ export const reducer = (state, {type, payload}) => {
     }
 }
 
+function isChanged(oldState, newState) {
+    let isChanged = false;
+    for (const key in oldState) {
+        if (oldState[key] !== newState[key]) {
+            isChanged = true
+        }
+    }
+    return isChanged;
+}
+
 export const connect = (selector) => (Component) => {
 
     return (props) => {
         const {state, setState} = useContext(appContext);
         const [, update] = useState({});
+
         const data = selector ? selector(state) : state;
+
+
         // 使用dispatch规范setState流程
-        useEffect(() => {
-            store.subscribe(() => {
-                update({})
-            })
-        }, [])
+        useEffect(() =>
+                // 当selector有变化的时候。取消订阅
+                store.subscribe(() => {
+                    const newData = selector ? selector(store.state) : store.state;
+                    if (isChanged(data, newData)) {
+                        console.log('update');
+                        // 当组件的状态有更新，会刷新组件
+                        update({})
+                    }
+                })
+            , [selector])
         const dispatch = (action) => {
             setState(reducer(state, action))
-            // update({})
         }
 
         return <Component {...props} {...data} dispatch={dispatch}/>;

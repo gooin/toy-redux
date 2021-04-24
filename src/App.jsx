@@ -52,10 +52,12 @@ const UserModifier = connect((state) => {
     )
 });
 
-const A3 = () => {
+const A3 = connect(state => {
+    return {group: state.group}
+})(({group}) => {
     console.log("A3 执行了" + new Date());
     return (
-        <h1>A3</h1>
+        <h1>A3 group: {group.name}</h1>
     )
-}
+})
 
