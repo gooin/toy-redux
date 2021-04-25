@@ -45,14 +45,17 @@ function isChanged(oldState, newState) {
     return isChanged;
 }
 
-export const connect = (selector) => (Component) => {
+export const connect = (selector, mapDispatcherToProps) => (Component) => {
 
     return (props) => {
         const {state, setState} = useContext(appContext);
         const [, update] = useState({});
+        const dispatch = (action) => {
+            setState(reducer(state, action))
+        }
 
         const data = selector ? selector(state) : state;
-
+        const dispatchers = mapDispatcherToProps ? mapDispatcherToProps(dispatch) : dispatch
 
         // 使用dispatch规范setState流程
         useEffect(() =>
@@ -66,11 +69,12 @@ export const connect = (selector) => (Component) => {
                     }
                 })
             , [selector])
-        const dispatch = (action) => {
-            setState(reducer(state, action))
-        }
 
-        return <Component {...props} {...data} dispatch={dispatch}/>;
+        return <Component
+            {...props}
+            {...data}
+            {...dispatchers}
+        />;
     };
 };
 

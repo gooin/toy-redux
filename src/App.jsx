@@ -32,13 +32,24 @@ const A1 = connect()(({user, dispatch}) => {
 
 
 // select 传入参数。 筛选出数据。 可以避免下面用的时候 aa.bb.cc.dd 点很长一串。
-const UserModifier = connect((state) => {
-    return {user: state.user}
-})((props) => {
+const UserModifier = connect
+(
+    (state) => {
+        return {user: state.user}
+    },
+    (dispatch) => {
+        return {
+            updateUser: (attrs) => dispatch({type: 'updateUser', payload: attrs})
+        }
+    }
+)
+((props) => {
     console.log("UserModifier 执行了" + new Date());
-    const {dispatch, user, children} = props;
+    console.log('UserModifier props', props);
+
+    const {updateUser, user, children} = props;
     const onChange = (e) => {
-        dispatch({type: 'updateUser', payload: {name: e.target.value}})
+        updateUser({name: e.target.value})
     }
     return (
         <>
