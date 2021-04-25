@@ -53,8 +53,9 @@ export const connect = (mapStateToProps, mapDispatchToProps) => (Component) => {
         const dispatch = (action) => {
             setState(reducer(state, action))
         }
-
+        // 筛选出状态的一部分数据。 状态树可能很大，没有必要全部传过来。只提取需要的一部分就行。
         const data = mapStateToProps ? mapStateToProps(state) : state;
+        // 简化dispatch。用户只需要传入数据就可以了
         const dispatchers = mapDispatchToProps ? mapDispatchToProps(dispatch) : dispatch
 
         // 使用dispatch规范setState流程
