@@ -45,7 +45,7 @@ function isChanged(oldState, newState) {
     return isChanged;
 }
 
-export const connect = (selector, mapDispatcherToProps) => (Component) => {
+export const connect = (mapStateToProps, mapDispatchToProps) => (Component) => {
 
     return (props) => {
         const {state, setState} = useContext(appContext);
@@ -54,21 +54,21 @@ export const connect = (selector, mapDispatcherToProps) => (Component) => {
             setState(reducer(state, action))
         }
 
-        const data = selector ? selector(state) : state;
-        const dispatchers = mapDispatcherToProps ? mapDispatcherToProps(dispatch) : dispatch
+        const data = mapStateToProps ? mapStateToProps(state) : state;
+        const dispatchers = mapDispatchToProps ? mapDispatchToProps(dispatch) : dispatch
 
         // 使用dispatch规范setState流程
         useEffect(() =>
                 // 当selector有变化的时候。取消订阅
                 store.subscribe(() => {
-                    const newData = selector ? selector(store.state) : store.state;
+                    const newData = mapStateToProps ? mapStateToProps(store.state) : store.state;
                     if (isChanged(data, newData)) {
                         console.log('update');
                         // 当组件的状态有更新，会刷新组件
                         update({})
                     }
                 })
-            , [selector])
+            , [mapStateToProps])
 
         return <Component
             {...props}
