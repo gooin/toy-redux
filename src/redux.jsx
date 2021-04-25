@@ -1,10 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
 
-export const store = {
-    state: {
-        user: {name: '张三', age: 123},
-        group: {name: '大大组'}
-    },
+
+const store = {
+    state: undefined,
+    reducer: undefined,
     setState(newState) {
         console.log('newState', newState);
         store.state = newState
@@ -17,23 +16,15 @@ export const store = {
             const index = store.listeners.indexOf(fn);
             store.listeners.splice(index, 1);
         }
-    }
+    },
 }
 
-// reducer 规范state的更新流程
-export const reducer = (state, {type, payload}) => {
-    if (type === 'updateUser') {
-        return {
-            ...state,
-            user: {
-                ...state.user,
-                ...payload
-            }
-        }
-    } else {
-        return state
-    }
-}
+export const createStore = (reducer, initState) => {
+    store.state = initState;
+    store.reducer = reducer;
+    return store;
+};
+
 
 function isChanged(oldState, newState) {
     let isChanged = false;
@@ -51,7 +42,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => (Component) => {
         const {state, setState} = useContext(appContext);
         const [, update] = useState({});
         const dispatch = (action) => {
-            setState(reducer(state, action))
+            setState(store.reducer(state, action))
         }
         // 筛选出状态的一部分数据。 状态树可能很大，没有必要全部传过来。只提取需要的一部分就行。
         const data = mapStateToProps ? mapStateToProps(state) : state;
@@ -80,3 +71,11 @@ export const connect = (mapStateToProps, mapDispatchToProps) => (Component) => {
 };
 
 export const appContext = React.createContext(null);
+
+export const Provider = ({store, children}) => {
+    return (
+        <appContext.Provider value={store}>
+            {children}
+        </appContext.Provider>
+    )
+}

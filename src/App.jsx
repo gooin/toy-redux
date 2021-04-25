@@ -1,8 +1,31 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react'
 
-import {appContext, connect, store} from "./redux.jsx";
+import {appContext, connect, createStore, Provider} from "./redux.jsx";
 import {connectToUser} from "./connecters/connectToUser";
 
+
+const initState = {
+    user: {name: '张三', age: 123},
+    group: {name: '大大组'}
+}
+
+
+// reducer 规范state的更新流程
+const reducer = (state, {type, payload}) => {
+    if (type === 'updateUser') {
+        return {
+            ...state,
+            user: {
+                ...state.user,
+                ...payload
+            }
+        }
+    } else {
+        return state
+    }
+}
+
+let store = createStore(reducer, initState)
 
 export const App = () => {
 
@@ -10,17 +33,16 @@ export const App = () => {
     // 使用 useMemo 将将A3缓存起来。
     let cachedA3 = useMemo(() => <A3/>, [])
 
+
     // 将状态写在外部，即redux。仅更新需要的组件。
-    return (
-        <appContext.Provider value={store}>
-            <A1/>
-            <UserModifier x={'xx'}>
-                <h1>XXX</h1>
-            </UserModifier>
-            {/*{cachedA3}*/}
-            <A3/>
-        </appContext.Provider>
-    );
+    return <Provider store={store}>
+        <A1/>
+        <UserModifier x={'xx'}>
+            <h1>XXX</h1>
+        </UserModifier>
+        {/*{cachedA3}*/}
+        <A3/>
+    </Provider>
 }
 
 
