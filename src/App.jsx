@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react'
 
 import {appContext, connect, store} from "./redux.jsx";
+import {connectToUser} from "./connecters/connectToUser";
 
 
 export const App = () => {
@@ -22,8 +23,9 @@ export const App = () => {
     );
 }
 
+
 // select不传入参数。 用默认的数据
-const A1 = connect()(({user, dispatch}) => {
+const A1 = connectToUser(({user, dispatch}) => {
     console.log("A1 执行了" + new Date());
     return (
         <h1>USER: {user.name}</h1>
@@ -32,18 +34,7 @@ const A1 = connect()(({user, dispatch}) => {
 
 
 // select 传入参数。 筛选出数据。 可以避免下面用的时候 aa.bb.cc.dd 点很长一串。
-const UserModifier = connect
-(
-    (state) => {
-        return {user: state.user}
-    },
-    (dispatch) => {
-        return {
-            updateUser: (attrs) => dispatch({type: 'updateUser', payload: attrs})
-        }
-    }
-)
-((props) => {
+const UserModifier = connectToUser((props) => {
     console.log("UserModifier 执行了" + new Date());
     console.log('UserModifier props', props);
 
@@ -59,13 +50,13 @@ const UserModifier = connect
                 onChange={onChange}
             />
         </>
-
     )
 });
 
-const A3 = connect(state => {
-    return {group: state.group}
-})(({group}) => {
+const A3 = connect(
+    state => {
+        return {group: state.group}
+    })(({group}) => {
     console.log("A3 执行了" + new Date());
     return (
         <h1>A3 group: {group.name}</h1>
